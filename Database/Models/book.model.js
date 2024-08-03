@@ -6,6 +6,11 @@ const schema = new Schema(
     author: String,
     publication_year: Date,
     ISBN: Number,
+    status: {
+      type: String,
+      enum: ["available", "borrowed"],
+      default: "available",
+    },
   },
   {
     versionKey: false,

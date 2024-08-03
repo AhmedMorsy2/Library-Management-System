@@ -5,20 +5,20 @@ import bcrypt from "bcrypt";
 import { Patron } from "../../../Database/Models/patron.model.js";
 
 const signup = catchError(async (req, res) => {
-  let user = new Patron(req.body);
-  await user.save();
+  let patron = new Patron(req.body);
+  await patron.save();
   let token = jwt.sign(
-    { userId: user._id, role: user.role },
+    { patronId: patron._id, role: patron.role },
     process.env.JWT_KEY
   );
   res.status(200).json({ message: "success", token });
 });
 
 const signin = catchError(async (req, res, next) => {
-  let user = await Patron.findOne({ email: req.body.email });
-  if (user && bcrypt.compareSync(req.body.password, user.password)) {
+  let patron = await Patron.findOne({ email: req.body.email });
+  if (patron && bcrypt.compareSync(req.body.password, patron.password)) {
     let token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { patronId: patron._id, role: patron.role },
       process.env.JWT_KEY
     );
     return res.status(200).json({ message: "success", token });
@@ -27,14 +27,14 @@ const signin = catchError(async (req, res, next) => {
 });
 
 const changeUserPassword = catchError(async (req, res, next) => {
-  let user = await Patron.findOne({ email: req.body.email });
-  if (user && bcrypt.compareSync(req.body.oldPassword, user.password)) {
+  let patron = await Patron.findOne({ email: req.body.email });
+  if (patron && bcrypt.compareSync(req.body.oldPassword, patron.password)) {
     await Patron.findOneAndUpdate(
       { email: req.body.email },
       { password: req.body.newPassword, passwordChangedAt: Date.now() }
     );
     let token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { patronId: patron._id, role: patron.role },
       process.env.JWT_KEY
     );
     return res.status(200).json({ message: "success", token });

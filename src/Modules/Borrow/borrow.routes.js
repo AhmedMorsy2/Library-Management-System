@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { allBorrowedBooks, borrowBook } from "./borrow.controller.js";
+import {
+  allBorrowedBooks,
+  borrowBook,
+  returnBook,
+} from "./borrow.controller.js";
 
 const borrowRouter = Router();
 

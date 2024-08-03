@@ -9,6 +9,11 @@ const schema = new Schema(
       phone_number: { type: Number },
       address: { type: String },
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
   },
   {
     versionKey: false,
