@@ -3,14 +3,14 @@ process.on("uncaughtException", (err) => {
 });
 
 import express from "express";
-import { AppError } from "./src/utils/appError.js";
-import { globalError } from "./src/utils/globalError.js";
 import { db } from "./Database/dbConnection.js";
+import "dotenv/config";
+import { AppError } from "./src/utils/appError.js";
+import { globalError } from "./src/Middlewares/globalError.js";
+
 const app = express();
 const port = 3000;
 app.use(express.json());
-
-
 
 app.use("*", (req, res, next) => {
   next(new AppError(`Route not found ${req.originalUrl}`, 404));
