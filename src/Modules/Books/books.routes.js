@@ -6,10 +6,12 @@ import {
   getSpecificBook,
   updateBook,
 } from "./books.controller.js";
+import { validations } from "../../Middlewares/validation.js";
+import { booksVal } from "./books.validation.js";
 
 const booksRouter = Router();
 
-booksRouter.route("/").get(getAllBooks).post(addBook);
+booksRouter.route("/").get(getAllBooks).post(validations(booksVal), addBook);
 
 booksRouter
   .route("/:id")

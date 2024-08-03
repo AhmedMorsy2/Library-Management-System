@@ -5,7 +5,7 @@ const schema = new Schema(
     title: String,
     author: String,
     publication_year: Date,
-    ISBN: Number,
+    ISBN: { type: Number, unique: true },
     status: {
       type: String,
       enum: ["available", "borrowed"],
