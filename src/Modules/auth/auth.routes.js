@@ -1,22 +1,18 @@
 import { Router } from "express";
+import { checkEmail } from "../../Middlewares/checkEmail.js";
+import { validations } from "../../Middlewares/validation.js";
 import {
-  allowedTo,
   changeUserPassword,
   protectedRoutes,
   signin,
   signup,
 } from "./auth.controller.js";
-import { checkEmail } from "../../Middlewares/checkEmail.js";
+import { signinVal, signupVal } from "./auth.validation.js";
 
 const authRouter = Router();
 
-authRouter.post("/signup", checkEmail, signup);
-authRouter.post("/signin", signin);
-authRouter.patch(
-  "/changepassword",
-  protectedRoutes,
-  allowedTo("user"),
-  changeUserPassword
-);
+authRouter.post("/signup", checkEmail, validations(signupVal), signup);
+authRouter.post("/signin", validations(signinVal), signin);
+authRouter.patch("/changepassword", protectedRoutes, changeUserPassword);
 
 export default authRouter;

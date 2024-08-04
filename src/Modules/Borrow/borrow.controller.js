@@ -6,7 +6,7 @@ import { AppError } from "../../utils/appError.js";
 const borrowBook = catchError(async (req, res, next) => {
   let borrow = new Borrow(req.body);
 
-  let book = await Book.findById(req.params.bookid);
+  let book = await Book.findById(req.params.bookId);
   if (!book) return next(new AppError("Book not found", 404));
 
   if (book.status == "borrowed")
@@ -14,8 +14,8 @@ const borrowBook = catchError(async (req, res, next) => {
 
   book.status = "borrowed";
   book.save();
-  borrow.book = req.params.bookid;
-  borrow.patron = req.patron._id;
+  borrow.book = req.params.bookId;
+  borrow.patron = req.params.patronId;
   borrow.borrow_date = Date.now();
 
   await borrow.save();
@@ -23,7 +23,7 @@ const borrowBook = catchError(async (req, res, next) => {
 });
 
 const allBorrowedBooks = catchError(async (req, res, next) => {
-  let books = await Borrow.find()
+  let books = await Borrow.find({ status: "borrowed" })
     .populate("book")
     .populate("patron", " name contact_information");
   if (books.length === 0)
@@ -33,11 +33,11 @@ const allBorrowedBooks = catchError(async (req, res, next) => {
 
 const returnBook = catchError(async (req, res, next) => {
   let borrow = await Borrow.findOneAndUpdate({
-    patron: req.patron._id,
-    book: req.params.bookid,
+    patron: req.params.patronId,
+    book: req.params.bookId,
   });
   if (!borrow) return next(new AppError("There is no recorded data ", 404));
-  await Book.findByIdAndUpdate(req.params.bookid, { status: "available" });
+  await Book.findByIdAndUpdate(req.params.bookId, { status: "available" });
   borrow.return_date = Date.now();
   borrow.save();
   res.status(200).json({ message: "success", data: borrow });

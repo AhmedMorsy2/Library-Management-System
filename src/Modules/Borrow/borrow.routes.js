@@ -1,18 +1,18 @@
 import { Router } from "express";
+import { protectedRoutes } from "../auth/auth.controller.js";
 import {
   allBorrowedBooks,
   borrowBook,
   returnBook,
 } from "./borrow.controller.js";
-import { allowedTo, protectedRoutes } from "../auth/auth.controller.js";
 
 const borrowRouter = Router();
 
 borrowRouter.use(protectedRoutes);
-borrowRouter.get("/", allowedTo("admin"), allBorrowedBooks);
+borrowRouter.get("/", allBorrowedBooks);
 
-borrowRouter.post("/:bookid", allowedTo("user", "admin"), borrowBook);
+borrowRouter.post("/:bookId/patron/:patronId", borrowBook);
 
-borrowRouter.put("/:bookid", allowedTo("user", "admin"), returnBook);
+borrowRouter.put("/:bookId/patron/:patronId", returnBook);
 
 export default borrowRouter;

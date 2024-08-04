@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { validations } from "../../Middlewares/validation.js";
+import { protectedRoutes } from "../auth/auth.controller.js";
 import {
   addPatron,
   deletePatron,
@@ -6,13 +8,15 @@ import {
   getSpecificPatron,
   updatePatron,
 } from "./patron.controller.js";
-import { allowedTo, protectedRoutes } from "../auth/auth.controller.js";
+import { addPatronVal } from "./patron.validation.js";
 
 const patronRouter = Router();
 
 patronRouter.use(protectedRoutes);
-patronRouter.use(allowedTo("admin"));
-patronRouter.route("/").get(getAllPatrons).post(addPatron);
+patronRouter
+  .route("/")
+  .get(getAllPatrons)
+  .post(validations(addPatronVal), addPatron);
 patronRouter
   .route("/:id")
   .get(getSpecificPatron)
