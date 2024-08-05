@@ -1,9 +1,8 @@
-import { catchError } from "../../Middlewares/catchError.js";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { Patron } from "../../../Database/Models/patron.model.js";
-import { AppError } from "../../utils/appError.js";
+import jwt from "jsonwebtoken";
 import { Librarians } from "../../../Database/Models/librarian.model.js";
+import { catchError } from "../../Middlewares/catchError.js";
+import { AppError } from "../../utils/appError.js";
 
 const signup = catchError(async (req, res) => {
   let librarian = new Librarians(req.body);
@@ -25,25 +24,6 @@ const signin = catchError(async (req, res, next) => {
     return res.status(200).json({ message: "success", token });
   }
   next(new AppError("Incorrect email or password", 401));
-});
-
-const changeUserPassword = catchError(async (req, res, next) => {
-  let librarian = await Librarians.findById(req.librarian._id);
-  if (
-    librarian &&
-    bcrypt.compareSync(req.body.oldPassword, librarian.password)
-  ) {
-    await Librarians.findByIdAndUpdate(req.librarian._id, {
-      password: req.body.newPassword,
-      passwordChangedAt: Date.now(),
-    });
-    let token = jwt.sign(
-      { librarianId: librarian._id, role: librarian.role },
-      process.env.JWT_KEY
-    );
-    return res.status(200).json({ message: "success", token });
-  }
-  next(new AppError("Incorrect old password", 401));
 });
 
 const protectedRoutes = catchError(async (req, res, next) => {
@@ -71,4 +51,4 @@ const protectedRoutes = catchError(async (req, res, next) => {
   next();
 });
 
-export { signup, signin, changeUserPassword, protectedRoutes };
+export { protectedRoutes, signin, signup };
