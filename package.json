@@ -9,12 +9,6 @@
   },
   "keywords": [],
   "author": "",
-  "jest": {
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
-  },
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -25,5 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.4",
     "nodemailer": "^6.9.14"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
