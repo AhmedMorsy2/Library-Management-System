@@ -14,8 +14,9 @@ const borrowBook = catchError(async (req, res, next) => {
 
   book.status = "borrowed";
   book.save();
-  borrow.book = req.params.bookId;
+  borrow.book = book._id;
   borrow.patron = req.params.patronId;
+  
   borrow.borrow_date = Date.now();
 
   await borrow.save();
